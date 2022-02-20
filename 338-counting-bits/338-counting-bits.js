@@ -3,12 +3,8 @@
  * @return {number[]}
  */
 var countBits = function(n) {
-  const result = [0];
+  const arr = Array.from({length: n + 1}, (v, i) => i.toString(2));
   
-  for(let i = 1; i <= n; i++){
-    result.push(result[Math.floor(i/2)] + Math.floor(i%2))
-  }
-  
-  return result;
-};
+  return arr.map((value) => value.match(/1/g)? value.match(/1/g).length : 0);
 
+};
