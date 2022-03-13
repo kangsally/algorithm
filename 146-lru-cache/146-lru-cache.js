@@ -1,47 +1,50 @@
 /**
  * @param {number} capacity
  */
-var LRUCache = function (capacity) {
-    this.cache = new Map();
-    this.capacity = capacity;
-}
+var LRUCache = function(capacity) {
+  this.cache = new Map();
+  this.capacity = capacity;
 
-/** 
+  this.LRUKeys = new Set();
+
+  this.addLRUKeys = function(key) {
+    this.LRUKeys.delete(key);
+    this.LRUKeys.add(key);
+  };
+
+  this.getLRUKey = function() {
+    const [key] = this.LRUKeys;
+    this.LRUKeys.delete(key);
+    return key;
+  }
+};
+
+/**
  * @param {number} key
  * @return {number}
  */
-LRUCache.prototype.get = function (key) {
-    if (!this.cache.has(key)) {
-        return -1;
-    }
-    
-    const value = this.cache.get(key);
-    
-    this.cache.delete(key);
-    this.cache.set(key, value);
-    
-    return value;
+LRUCache.prototype.get = function(key) {
+  const value = this.cache.get(key);
+
+  if (value === undefined) return -1;
+
+  this.addLRUKeys(key);
+
+  return value;
 };
 
-/** 
+/**
  * @param {number} key 
  * @param {number} value
  * @return {void}
  */
-LRUCache.prototype.put = function (key, value) {
-    if (this.cache.has(key)) {
-        this.cache.delete(key);
-        this.cache.set(key, value);
-        
-        return;
-    }
-    
-    if (this.cache.size === this.capacity) {
-        const [firstKey] = this.cache.keys();
-        this.cache.delete(firstKey);
-    }
-    
-    this.cache.set(key, value);
+LRUCache.prototype.put = function(key, value) {
+  this.addLRUKeys(key);
+  this.cache.set(key, value);
+
+  if (this.cache.size > this.capacity) {
+    this.cache.delete(this.getLRUKey());
+  }
 };
 
 /** 
