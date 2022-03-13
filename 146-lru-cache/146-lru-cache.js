@@ -1,7 +1,7 @@
 /**
  * @param {number} capacity
  */
-function LRUCache(capacity) {
+var LRUCache = function (capacity) {
     this.cache = new Map();
     this.capacity = capacity;
 }
